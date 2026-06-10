@@ -34,8 +34,7 @@ jobs:
         with:
           target: 'http://localhost:5000'
           fail_action: false
-          # Disables generating GitHub issues
-          issue_title: ''
+          allow_issue_writing: false
           
       - name: Upload Baseline Scan Report
         uses: actions/upload-artifact@v4
@@ -49,8 +48,7 @@ jobs:
         with:
           target: 'http://localhost:5000'
           fail_action: false
-          # Disables generating GitHub issues
-          issue_title: ''
+          allow_issue_writing: false
 
       - name: Upload Full Scan Report
         uses: actions/upload-artifact@v4
