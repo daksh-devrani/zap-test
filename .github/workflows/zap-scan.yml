@@ -9,55 +9,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  semgrep:
+  security_scan:
     runs-on: ubuntu-latest
-    name: Semgrep SAST Scan
+    name: Full Security Pipeline
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run Semgrep
+
+      - name: Run Semgrep SAST
         uses: returntocorp/semgrep-action@v1
         with:
           config: "p/default"
 
-  trivy:
-    runs-on: ubuntu-latest
-    name: Trivy Container Scan
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
       - name: Build the Docker image
         run: docker build -t vulnerable-app .
-      - name: Run Trivy
+
+      - name: Run Trivy Container Scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'vulnerable-app'
           format: 'table'
           exit-code: '0'
 
-  grype:
-    runs-on: ubuntu-latest
-    name: Grype Container Scan
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build the Docker image
-        run: docker build -t vulnerable-app .
-      - name: Run Grype
+      - name: Run Grype Container Scan
         uses: anchore/scan-action@v3
         with:
           image: "vulnerable-app"
           fail-build: false
-
-  zap_scan:
-    runs-on: ubuntu-latest
-    name: Build, Run, and Scan
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build the Docker image
-        run: docker build -t vulnerable-app .
 
       - name: Run the Docker container
         run: docker run -d -p 5000:5000 --name vulnerable-app-container vulnerable-app
