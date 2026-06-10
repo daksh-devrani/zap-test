@@ -30,7 +30,7 @@ jobs:
           echo "Application is up and running!"
 
       - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.15.0
         with:
           target: 'http://localhost:5000'
           fail_action: false
@@ -38,7 +38,7 @@ jobs:
           artifact_name: 'zapreportbaseline'
 
       - name: ZAP Full Scan
-        uses: zaproxy/action-full-scan@v0.10.0
+        uses: zaproxy/action-full-scan@v0.13.0
         with:
           target: 'http://localhost:5000'
           fail_action: false
