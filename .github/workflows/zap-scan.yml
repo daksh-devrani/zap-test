@@ -35,14 +35,7 @@ jobs:
           target: 'http://localhost:5000'
           fail_action: false
           allow_issue_writing: false
-          artifact_name: ''
-          
-      - name: Upload Baseline Scan Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: zap-baseline-report
-          path: report_html.html
+          artifact_name: 'zapreportbaseline'
 
       - name: ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.10.0
@@ -50,11 +43,4 @@ jobs:
           target: 'http://localhost:5000'
           fail_action: false
           allow_issue_writing: false
-          artifact_name: ''
-
-      - name: Upload Full Scan Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: zap-full-scan-report
-          path: report_html.html
+          artifact_name: 'zapreportfull'
