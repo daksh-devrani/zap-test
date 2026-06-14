@@ -45,19 +45,19 @@ jobs:
           name: trivy-report
           path: trivy-results.json
 
+      - name: Install Grype
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
       - name: Run Grype Container Scan
-        uses: anchore/scan-action@v3
-        with:
-          image: "vulnerable-app"
-          fail-build: false
-          output-format: "json"
+        run: grype vulnerable-app -o json > grype-results.json
+        continue-on-error: true
 
       - name: Upload Grype Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: grype-report
-          path: results.json
+          path: grype-results.json
 
       - name: Run the Docker container
         run: docker run -d -p 5000:5000 --name vulnerable-app-container vulnerable-app
