@@ -69,6 +69,18 @@ jobs:
           curl -s http://localhost:5000 > /dev/null || exit 1
           echo "Application is up and running!"
 
+      - name: Start Tracee Runtime Monitoring
+        run: |
+          docker run -d \
+            --name tracee \
+            --privileged \
+            --pid=host \
+            --cgroupns=host \
+            -v /etc/os-release:/etc/os-release-host:ro \
+            -v /var/run:/var/run:ro \
+            -v /tmp:/tmp \
+            aquasec/tracee:latest    
+
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.15.0
         with:
@@ -84,3 +96,20 @@ jobs:
           fail_action: false
           allow_issue_writing: false
           artifact_name: 'zapreportfull'
+
+      - name: Export Tracee Logs
+        if: always()
+        run: |
+          docker logs tracee > tracee-results.txt
+
+      - name: Upload Tracee Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tracee-report
+          path: tracee-results.txt   
+
+      - name: Stop Tracee
+        if: always()
+        run: |
+          docker stop tracee || true     
